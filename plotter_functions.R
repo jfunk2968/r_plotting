@@ -1,7 +1,9 @@
 
 library(dplyr)
 library(ggplot2)
+library(stringr)
 
+df <- read.csv("~/Desktop/us_census_income/census_train.csv")
 
 # Plot function for numeric data
 
@@ -56,8 +58,10 @@ plot_numeric <- function(col, target, bins=10, bin_method='hist', xname="X Varia
 }
 
 
+plot_numeric(df$age, df$income50k, bins=30)
 
-plot_factor <-function(col, target, xname="X Variable")  {
+
+plot_factor <-function(col, target, xname="X Variable", show_max=-1)  {
   df2 <- cbind.data.frame(col, target)
   colnames(df2) <- c("col","target")
   
@@ -66,6 +70,12 @@ plot_factor <-function(col, target, xname="X Variable")  {
     summarise(count = n(),
               target = mean(target))
   
+  if(show_max>0){
+    sum <- sum %>%
+      arrange(desc(count)) %>%
+      head(show_max)
+    }
+  
   sum$x <- seq(1, nrow(sum), 1)
   sum$x_start <- sum$x -.3
   sum$x_end <- sum$x + .3
@@ -73,7 +83,10 @@ plot_factor <-function(col, target, xname="X Variable")  {
   
   scale_factor = max(sum$target) / max(sum$count)
   
-  ggplot(data=sum, aes(x=col)) +
+  print(sum)
+  str(sum)
+  
+  ggplot(data=sum, aes(x=x)) +
     geom_bar(mapping = aes(y=count), stat='identity', col='blue3', fill='cornflowerblue') +
     geom_segment(aes(x=x_start, xend=x_end, y=target/scale_factor, yend=target/scale_factor),
                  col='red', size=1) +
@@ -81,7 +94,7 @@ plot_factor <-function(col, target, xname="X Variable")  {
     scale_y_continuous(name = "Frequency Count", 
                        sec.axis = sec_axis(~.*scale_factor, 
                                            name = "Target Rate")) +
-    scale_x_discrete(labels = sum$label) +
+    scale_x_continuous(breaks = sum$x, labels = sum$label) +
     theme(axis.title = element_text(size=16),
           axis.title.y = element_text(color='blue3'),
           axis.title.y.right = element_text(color='red'),
@@ -91,5 +104,6 @@ plot_factor <-function(col, target, xname="X Variable")  {
 
 
 plot_factor(df$marital.status, df$income50k)
-plot_factor(df$major.occupation.code, df$income50k)
-plot_factor(df$state.of.previous.residenc, df$income50k)
+plot_factor(df$major.occupation.code, df$income50k, show_max = 5)
+plot_factor(df$state.of.previous.residenc, df$income50k, show_max=10)
+
