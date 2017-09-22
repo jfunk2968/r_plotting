@@ -2,6 +2,7 @@
 library(dplyr)
 library(ggplot2)
 library(stringr)
+library(cowplot)
 
 df <- read.csv("~/Desktop/us_census_income/census_train.csv")
 
@@ -170,49 +171,40 @@ n_plot_numeric(white$residual.sugar,
                yname="Acidity")
 
 
-c_plot_factor <-function(col, target, xname="X Variable", show_max=-1)  {
-  df2 <- cbind.data.frame(col, target)
-  colnames(df2) <- c("col","target")
+n_plot_factor <-function(col, target, xname="X Variable", yname="Y Variable", 
+                         y_log=FALSE, show_max=20)  {
   
-  sum <- df2 %>%
-    group_by(col) %>%
-    summarise(count = n(),
-              target = mean(target))
+  df <- cbind.data.frame(col, target)
+  colnames(df) <- c("xcol","target")
   
-  if(show_max>0){
-    sum <- sum %>%
-      arrange(desc(count)) %>%
-      head(show_max)
-  }
+  keepers <- df %>%
+    group_by(xcol) %>%
+    summarise(count = n()) %>%
+    arrange(desc(count)) %>%
+    head(show_max)
+
   
-  sum$x <- seq(1, nrow(sum), 1)
-  sum$x_start <- sum$x -.3
-  sum$x_end <- sum$x + .3
-  sum$label = str_wrap(sum$col, width=20)
+  df2 <- df %>%
+    filter(xcol %in% keepers$xcol) %>%
+    mutate(xcolnew = str_wrap(factor(as.character(xcol), levels=keepers$xcol), width=20))
   
-  scale_factor = max(sum$target) / max(sum$count)
+  hist_rug <- ggplot(data=df2, aes(x=xcolnew)) +
+    geom_bar() +
+    theme_void() +
+    theme(axis.line = element_line(colour = "black"))
   
-  print(sum)
-  str(sum)
-  
-  ggplot(data=sum, aes(x=x)) +
-    geom_bar(mapping = aes(y=count), stat='identity', col='blue3', fill='cornflowerblue') +
-    geom_segment(aes(x=x_start, xend=x_end, y=target/scale_factor, yend=target/scale_factor),
-                 col='red', size=1) +
-    geom_point(mapping = aes(y=target/scale_factor), size = 3, shape = 21, col='red', fill = "white") +
-    scale_y_continuous(name = "Frequency Count", 
-                       sec.axis = sec_axis(~.*scale_factor, 
-                                           name = "Target Rate")) +
-    scale_x_continuous(breaks = sum$x, labels = sum$label) +
+  boxplot <- ggplot(data=df2, aes(x=xcolnew, y=target)) +
+    geom_boxplot(col='blue3', fill='cornflowerblue') +
+    labs(x=xname, y=yname) +
     theme(axis.title = element_text(size=16),
-          axis.title.y = element_text(color='blue3'),
-          axis.title.y.right = element_text(color='red'),
           axis.text.x = element_text(angle=45, hjust=1, vjust=1),
           axis.text = element_text(size=12))
+  
+  plot_grid(boxplot, hist_rug, rel_heights=c(0.9, 0.1), ncol=1, align='v')
 }
 
+n_plot_factor(df$marital.status, df$age, xname="Marital Status", yname="Age", 
+              y_log=FALSE, show_max=5)
 
-c_plot_factor(df$marital.status, df$income50k)
-c_plot_factor(df$major.occupation.code, df$income50k, show_max = 5)
-c_plot_factor(df$state.of.previous.residenc, df$income50k, show_max=10)
-
+n_plot_factor(df$major.occupation.code, df$age, xname="Marital Status", yname="Job", 
+              y_log=FALSE)
