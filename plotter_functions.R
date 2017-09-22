@@ -180,13 +180,13 @@ n_plot_factor <-function(col, target, xname="X Variable", yname="Y Variable",
   keepers <- df %>%
     group_by(xcol) %>%
     summarise(count = n()) %>%
-    arrange(desc(count)) %>%
+    arrange(desc(count)) %>% 
+    mutate(labels = str_wrap(xcol, width=20)) %>%
     head(show_max)
-
   
   df2 <- df %>%
     filter(xcol %in% keepers$xcol) %>%
-    mutate(xcolnew = str_wrap(factor(as.character(xcol), levels=keepers$xcol), width=20))
+    mutate(xcolnew = factor(as.character(xcol), levels=keepers$xcol))
   
   hist_rug <- ggplot(data=df2, aes(x=xcolnew)) +
     geom_bar() +
@@ -196,6 +196,7 @@ n_plot_factor <-function(col, target, xname="X Variable", yname="Y Variable",
   boxplot <- ggplot(data=df2, aes(x=xcolnew, y=target)) +
     geom_boxplot(col='blue3', fill='cornflowerblue') +
     labs(x=xname, y=yname) +
+    scale_x_discrete(labels = keepers$labels) +
     theme(axis.title = element_text(size=16),
           axis.text.x = element_text(angle=45, hjust=1, vjust=1),
           axis.text = element_text(size=12))
