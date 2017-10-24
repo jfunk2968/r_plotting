@@ -3,39 +3,6 @@ R Plotting Functions for Model Development
 
 #### This notebook illustrates a few examples of custom R plotting functions that can be used to investigate the relationship between 2 variables. A good use case would be working to understand univariate relationship discoverd in predictive modeling, although potential applications are many. While these plots are fairly easy to create manually with dplyr and ggplot2, functions like these incorporate much of the data processing and make it very fast to produce attractive, presentation level plots.
 
-``` r
-# source local file with plotting functions
-source('~/Desktop/R Code/shiny_plotter/plotter_functions.R')
-```
-
-    ## Warning: package 'dplyr' was built under R version 3.4.1
-
-    ## 
-    ## Attaching package: 'dplyr'
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
-
-    ## Warning: package 'cowplot' was built under R version 3.4.1
-
-    ## 
-    ## Attaching package: 'cowplot'
-
-    ## The following object is masked from 'package:ggplot2':
-    ## 
-    ##     ggsave
-
-``` r
-# read sample data sets for plotting
-census <- read.csv("~/Desktop/us_census_income/census_train.csv")
-white <- read.csv('~/Desktop/wine_quality/winequality-white.csv', sep=";")
-```
-
 Binary Dependent Variable by Continous Independent Variable
 -----------------------------------------------------------
 

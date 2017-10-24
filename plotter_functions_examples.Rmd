@@ -6,7 +6,7 @@ output: github_document
 
 #### This notebook illustrates a few examples of custom R plotting functions that can be used to investigate the relationship between 2 variables.  A good use case would be working to understand univariate relationship discoverd in predictive modeling, although potential applications are many.  While these plots are fairly easy to create manually with dplyr and ggplot2, functions like these incorporate much of the data processing and make it very fast to produce attractive, presentation level plots.
 
-```{r}
+```{r, warning=FALSE, message=FALSE, include=FALSE}
 # source local file with plotting functions
 source('~/Desktop/R Code/shiny_plotter/plotter_functions.R')
 
