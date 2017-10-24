@@ -7,15 +7,17 @@ library(cowplot)
 
 # Plot function for numeric data
 
-c_plot_numeric <- function(col, target, bins=10, bin_method='hist', xname="X Variable") {
+c_plot_numeric <- function(col, target, bins=10, bin_method='hist', xname="X Variable", yname="Target") {
   
   if(bin_method=='hist') {
     breaks <- seq(min(col), max(col), (max(col)-min(col))/bins)
     x_label <- paste(xname, "Bin", collapse=" ")
+    y_label <- paste(yname, "Rate", collapse=" ")
   }
   else if(bin_method=='quant') {
     breaks <- unique(quantile(col, probs=seq(0, 1, 1/bins)))
     x_label <- paste(xname, "Quantile Bin", collapse=" ")
+    y_label <- paste(yname, "Rate", collapse=" ")
   }
   else {
     print("Not a valid binning method ... please choose 'hist' or 'quant'")
@@ -46,7 +48,7 @@ c_plot_numeric <- function(col, target, bins=10, bin_method='hist', xname="X Var
     geom_point(mapping = aes(y=target/scale_factor), size = 3, shape = 21, fill = "white") +
     scale_y_continuous(name = "Frequency Count", 
                        sec.axis = sec_axis(~.*scale_factor, 
-                                           name="Target Rate")) +
+                                           name=y_label)) +
     scale_x_continuous(name = x_label,
                        breaks = seq(1, bins, 1),
                        labels = bin_labels) +
@@ -58,7 +60,7 @@ c_plot_numeric <- function(col, target, bins=10, bin_method='hist', xname="X Var
 }
 
 
-c_plot_factor <-function(col, target, xname="X Variable", show_max=-1)  {
+c_plot_factor <-function(col, target, xname="X Variable", yname="Target", show_max=-1)  {
   df2 <- cbind.data.frame(col, target)
   colnames(df2) <- c("col","target")
   
@@ -80,8 +82,7 @@ c_plot_factor <-function(col, target, xname="X Variable", show_max=-1)  {
   
   scale_factor = max(sum$target) / max(sum$count)
   
-  print(sum)
-  str(sum)
+  y_label <- paste(yname, "Rate", collapse=" ")
   
   ggplot(data=sum, aes(x=x)) +
     geom_bar(mapping = aes(y=count), stat='identity', col='blue3', fill='cornflowerblue') +
@@ -90,8 +91,8 @@ c_plot_factor <-function(col, target, xname="X Variable", show_max=-1)  {
     geom_point(mapping = aes(y=target/scale_factor), size = 3, shape = 21, col='red', fill = "white") +
     scale_y_continuous(name = "Frequency Count", 
                        sec.axis = sec_axis(~.*scale_factor, 
-                                           name = "Target Rate")) +
-    scale_x_continuous(breaks = sum$x, labels = sum$label) +
+                                           name = y_label)) +
+    scale_x_continuous(breaks = sum$x, labels = sum$label, name = xname) +
     theme(axis.title = element_text(size=16),
           axis.title.y = element_text(color='blue3'),
           axis.title.y.right = element_text(color='red'),
