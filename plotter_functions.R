@@ -5,7 +5,7 @@ library(stringr)
 library(cowplot)
 
 
-# Plot function for numeric data
+# Plot function for binary target and continuous variable
 
 c_plot_numeric <- function(col, target, bins=10, bin_method='hist', xname="X Variable", yname="Target") {
   
@@ -60,6 +60,8 @@ c_plot_numeric <- function(col, target, bins=10, bin_method='hist', xname="X Var
 }
 
 
+# Plot function for binary target and categorical variable
+
 c_plot_factor <-function(col, target, xname="X Variable", yname="Target", show_max=-1)  {
   df2 <- cbind.data.frame(col, target)
   colnames(df2) <- c("col","target")
@@ -101,12 +103,7 @@ c_plot_factor <-function(col, target, xname="X Variable", yname="Target", show_m
 }
 
 
-# scatterplot
-#  - sampling
-#  - fit line (linear, lowess) with ci
-#  - transforms
-#  - outlier removal
-
+# Plot function for continuous target and continuous variable
 
 n_plot_numeric <- function(col, target, samp_size=1000, line=TRUE, x_log=FALSE, y_log=FALSE,
                            xname="X Variable", yname="Y Variable") {
@@ -148,6 +145,8 @@ n_plot_numeric <- function(col, target, samp_size=1000, line=TRUE, x_log=FALSE, 
 }
 
 
+# Plot function for continuous target and categorical variable
+
 n_plot_factor <-function(col, target, xname="X Variable", yname="Y Variable", 
                          y_log=FALSE, show_max=20)  {
   
@@ -180,9 +179,3 @@ n_plot_factor <-function(col, target, xname="X Variable", yname="Y Variable",
   
   plot_grid(boxplot, hist_rug, rel_heights=c(0.9, 0.1), ncol=1, align='v')
 }
-
-n_plot_factor(df$marital.status, df$age, xname="Marital Status", yname="Age", 
-              y_log=FALSE, show_max=5)
-
-n_plot_factor(df$major.occupation.code, df$age, xname="Marital Status", yname="Job", 
-              y_log=FALSE)
