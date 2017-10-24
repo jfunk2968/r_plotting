@@ -1,4 +1,4 @@
-# R Plotting Functions for Univariate Relationship
+# R Plotting Functions for Investigating Univariate Relationships
 
 ### Quickly create useful, pretty plots like the one below!
 
