@@ -1,6 +1,7 @@
 ---
 title: "R Plotting Functions for Model Development"
-output: html_notebook
+#output: html_notebook
+output: github_document
 ---
 
 #### This notebook illustrates a few examples of custom R plotting functions that can be used to investigate the relationship between 2 variables.  A good use case would be working to understand univariate relationship discoverd in predictive modeling, although potential applications are many.  While these plots are fairly easy to create manually with dplyr and ggplot2, functions like these incorporate much of the data processing and make it very fast to produce attractive, presentation level plots.
@@ -17,18 +18,18 @@ white <- read.csv('~/Desktop/wine_quality/winequality-white.csv', sep=";")
 ## Binary Dependent Variable by Continous Independent Variable 
 This plot shows how a binary target (dependent variable) is related to a continuous numeric X (independent variable).  X variable is binned so that the target can be shown as a rate in each bin.  The distribution of the X variable is also shown (blue bars) for context.
 ```{r}
-c_plot_numeric(df$age, df$income50k, bins=24, xname="Income", yname="Income >50k")
+c_plot_numeric(census$age, census$income50k, bins=24, xname="Income", yname="Income >50k")
 ```
 
 ## Binary Dependent Variable by Categorical Independent Variable 
 This plot shows how a binary target differs by values of a categorical X variable.
 ```{r}
-c_plot_factor(df$marital.status, df$income50k, xname="Marital Status", yname="Income >50k")
+c_plot_factor(census$marital.status, census$income50k, xname="Marital Status", yname="Income >50k")
 ```
 
 The 'show_max' parameter is useful for categorical variables with many levels, below we only show the 5 largest values.
 ```{r}
-c_plot_factor(df$major.occupation.code, df$income50k, xname="Occupation", yname="Income>50k", show_max = 5)
+c_plot_factor(census$major.occupation.code, census$income50k, xname="Occupation", yname="Income>50k", show_max = 5)
 ```
 
 
@@ -41,12 +42,12 @@ n_plot_numeric(white$residual.sugar, white$volatile.acidity, samp_size=500, line
 ## Continuous Dependent Variable by Categorical Independent Variable 
 This plot looks at the relationship between a continuous numeric target and a categorical X.  The distribution of the target variable is displayed using traditional boxplots for each X value.  The X variable distribution is shown with a 'rug' style bar chart below the plot for context.
 ```{r}
-n_plot_factor(df$marital.status, df$age, xname="Marital Status", yname="Age", y_log=FALSE, show_max=5)
+n_plot_factor(census$marital.status, census$age, xname="Marital Status", yname="Age", y_log=FALSE, show_max=5)
 ```             
 
 Another example below using the 'show_max' option.
 ```{r}
-n_plot_factor(df$major.occupation.code, df$age, xname="Marital Status", yname="Job", y_log=FALSE, show_max=10)
+n_plot_factor(census$major.occupation.code, census$age, xname="Marital Status", yname="Job", y_log=FALSE, show_max=10)
 ```             
               
                
