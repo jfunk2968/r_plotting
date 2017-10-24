@@ -4,7 +4,6 @@ library(ggplot2)
 library(stringr)
 library(cowplot)
 
-df <- read.csv("~/Desktop/us_census_income/census_train.csv")
 
 # Plot function for numeric data
 
@@ -59,9 +58,6 @@ c_plot_numeric <- function(col, target, bins=10, bin_method='hist', xname="X Var
 }
 
 
-c_plot_numeric(df$age, df$income50k, bins=30)
-
-
 c_plot_factor <-function(col, target, xname="X Variable", show_max=-1)  {
   df2 <- cbind.data.frame(col, target)
   colnames(df2) <- c("col","target")
@@ -103,16 +99,6 @@ c_plot_factor <-function(col, target, xname="X Variable", show_max=-1)  {
           axis.text = element_text(size=12))
 }
 
-
-c_plot_factor(df$marital.status, df$income50k)
-c_plot_factor(df$major.occupation.code, df$income50k, show_max = 5)
-c_plot_factor(df$state.of.previous.residenc, df$income50k, show_max=10)
-
-
-
-
-white <- read.csv('~/Desktop/wine_quality/winequality-white.csv', sep=";")
-head(white)
 
 # scatterplot
 #  - sampling
@@ -159,16 +145,6 @@ n_plot_numeric <- function(col, target, samp_size=1000, line=TRUE, x_log=FALSE, 
   
   print(p)
 }
-
-
-n_plot_numeric(white$residual.sugar, 
-               white$volatile.acidity, 
-               samp_size=500,
-               line=TRUE,
-               x_log=TRUE, 
-               y_log=FALSE,
-               xname="Sugar", 
-               yname="Acidity")
 
 
 n_plot_factor <-function(col, target, xname="X Variable", yname="Y Variable", 

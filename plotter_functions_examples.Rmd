@@ -1,0 +1,53 @@
+---
+title: "R Plotting Functions for Model Development"
+output: html_notebook
+---
+
+
+```{r}
+# source file with plotting functions
+source('~/Desktop/R Code/shiny_plotter/plotter_functions.R')
+```
+
+
+```{r}
+
+# read sample data sets for plotting
+census <- read.csv("~/Desktop/us_census_income/census_train.csv")
+white <- read.csv('~/Desktop/wine_quality/winequality-white.csv', sep=";")
+```
+
+
+
+c_plot_numeric(df$age, df$income50k, bins=30)
+
+
+c_plot_factor(df$marital.status, df$income50k)
+c_plot_factor(df$major.occupation.code, df$income50k, show_max = 5)
+c_plot_factor(df$state.of.previous.residenc, df$income50k, show_max=10)
+
+
+
+
+white <- read.csv('~/Desktop/wine_quality/winequality-white.csv', sep=";")
+head(white)
+
+
+
+n_plot_numeric(white$residual.sugar, 
+               white$volatile.acidity, 
+               samp_size=500,
+               line=TRUE,
+               x_log=TRUE, 
+               y_log=FALSE,
+               xname="Sugar", 
+               yname="Acidity")
+               
+
+n_plot_factor(df$marital.status, df$age, xname="Marital Status", yname="Age", 
+              y_log=FALSE, show_max=5)
+
+n_plot_factor(df$major.occupation.code, df$age, xname="Marital Status", yname="Job", 
+              y_log=FALSE)
+               
+               
